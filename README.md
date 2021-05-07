@@ -1,1 +1,0 @@
-# QuanLyVeXeKhach_JavaProject

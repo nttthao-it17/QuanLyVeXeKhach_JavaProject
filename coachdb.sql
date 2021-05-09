@@ -25,14 +25,10 @@ DROP TABLE IF EXISTS `booking_ticket`;
 CREATE TABLE `booking_ticket` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `price_id` int NOT NULL,
-  `amount_of_booking_ticket` int NOT NULL,
-  `date_booking` date NOT NULL,
+  `amount` int NOT NULL,
+  `date_created` date NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `user_id_bt_idx` (`user_id`),
-  KEY `price_id_bt_idx` (`price_id`),
-  CONSTRAINT `price_id_bt` FOREIGN KEY (`price_id`) REFERENCES `price_ticket` (`id`),
   CONSTRAINT `user_id_bt` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -43,34 +39,8 @@ CREATE TABLE `booking_ticket` (
 
 LOCK TABLES `booking_ticket` WRITE;
 /*!40000 ALTER TABLE `booking_ticket` DISABLE KEYS */;
+INSERT INTO `booking_ticket` VALUES (1,2,2,'2021-05-18'),(2,1,3,'2021-03-04'),(3,3,1,'2021-05-01');
 /*!40000 ALTER TABLE `booking_ticket` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `coach`
---
-
-DROP TABLE IF EXISTS `coach`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `coach` (
-  `id` int NOT NULL,
-  `name_coach` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `license_plate` varchar(12) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `amount_of_seat` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `license_plate_UNIQUE` (`license_plate`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `coach`
---
-
-LOCK TABLES `coach` WRITE;
-/*!40000 ALTER TABLE `coach` DISABLE KEYS */;
-INSERT INTO `coach` VALUES (1,'HuynDai','60B8162',50),(2,'Thaco','49D3652',24),(3,'Limousin','59D2432',16);
-/*!40000 ALTER TABLE `coach` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -83,13 +53,10 @@ DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `booking_ticket_id` int NOT NULL,
-  `discription` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `description` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_date` date NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `booking_ticket_id_fb_idx` (`booking_ticket_id`),
-  CONSTRAINT `booking_ticket_id_fb` FOREIGN KEY (`booking_ticket_id`) REFERENCES `booking_ticket` (`id`),
+  KEY `user_id_fb_idx` (`user_id`),
   CONSTRAINT `user_id_fb` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -100,59 +67,8 @@ CREATE TABLE `feedback` (
 
 LOCK TABLES `feedback` WRITE;
 /*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
+INSERT INTO `feedback` VALUES (1,3,'Dịch vụ tốt, phục vụ chu đáo','2021-05-25'),(2,1,'Khá ổn, giá cả hợp lý','2021-06-01'),(3,2,'Đón khách trễ','2021-03-04');
 /*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `price_of_trip`
---
-
-DROP TABLE IF EXISTS `price_of_trip`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `price_of_trip` (
-  `trip_id` int NOT NULL,
-  `price_id` int NOT NULL,
-  PRIMARY KEY (`trip_id`,`price_id`),
-  KEY `price_id_pot_idx` (`price_id`),
-  CONSTRAINT `price_id_pot` FOREIGN KEY (`price_id`) REFERENCES `price_ticket` (`id`),
-  CONSTRAINT `trip_id_pot` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `price_of_trip`
---
-
-LOCK TABLES `price_of_trip` WRITE;
-/*!40000 ALTER TABLE `price_of_trip` DISABLE KEYS */;
-INSERT INTO `price_of_trip` VALUES (1,2),(1,3);
-/*!40000 ALTER TABLE `price_of_trip` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `price_ticket`
---
-
-DROP TABLE IF EXISTS `price_ticket`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `price_ticket` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `amount_of_ticket` int NOT NULL,
-  `price` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `price_ticket`
---
-
-LOCK TABLES `price_ticket` WRITE;
-/*!40000 ALTER TABLE `price_ticket` DISABLE KEYS */;
-INSERT INTO `price_ticket` VALUES (1,24,80000),(2,30,90000),(3,50,200000);
-/*!40000 ALTER TABLE `price_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -181,6 +97,36 @@ INSERT INTO `route` VALUES (1,'BX Nguyễn Văn Lượng - Gò Vấp','BX Đà L
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ticket_detail`
+--
+
+DROP TABLE IF EXISTS `ticket_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket_detail` (
+  `id` int NOT NULL,
+  `trip_id` int NOT NULL,
+  `booking_id` int NOT NULL,
+  `price` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trip_id_td_idx` (`trip_id`),
+  KEY `booking_id_td_idx` (`booking_id`),
+  CONSTRAINT `booking_id_td` FOREIGN KEY (`booking_id`) REFERENCES `booking_ticket` (`id`),
+  CONSTRAINT `trip_id_td` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticket_detail`
+--
+
+LOCK TABLES `ticket_detail` WRITE;
+/*!40000 ALTER TABLE `ticket_detail` DISABLE KEYS */;
+INSERT INTO `ticket_detail` VALUES (1,2,2,1560000),(2,3,1,180000),(3,2,3,520000);
+/*!40000 ALTER TABLE `ticket_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `trip`
 --
 
@@ -190,8 +136,11 @@ DROP TABLE IF EXISTS `trip`;
 CREATE TABLE `trip` (
   `id` int NOT NULL AUTO_INCREMENT,
   `route_id` int NOT NULL,
-  `amount_of_trip_on_day` int NOT NULL,
+  `trip_description` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `coach_name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date_started` date NOT NULL,
   `time_started` time NOT NULL,
+  `price` decimal(10,0) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `route_id_trip_idx` (`route_id`),
@@ -205,36 +154,8 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (1,1,2,'00:00:00'),(2,3,1,'00:00:00'),(3,2,1,'00:00:00');
+INSERT INTO `trip` VALUES (1,1,'Sài Gòn - Đà Lạt','Huyndai 24 chỗ','2021-04-19','07:00:00',300000),(2,3,'Sài Gòn - Đà Lạt','Limousin 16 chỗ','2021-05-01','18:00:00',520000),(3,2,'Sài Gòn - Đồng Nai','Thaco 54 chỗ','2021-03-20','09:00:00',90000);
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `trip_coach`
---
-
-DROP TABLE IF EXISTS `trip_coach`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `trip_coach` (
-  `coach_id` int NOT NULL,
-  `trip_id` int NOT NULL,
-  `date_started` date NOT NULL,
-  PRIMARY KEY (`coach_id`,`trip_id`,`date_started`),
-  KEY `trip_id_tc_idx` (`trip_id`),
-  CONSTRAINT `coach_id_tc` FOREIGN KEY (`coach_id`) REFERENCES `coach` (`id`),
-  CONSTRAINT `trip_id_tc` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `trip_coach`
---
-
-LOCK TABLES `trip_coach` WRITE;
-/*!40000 ALTER TABLE `trip_coach` DISABLE KEYS */;
-INSERT INTO `trip_coach` VALUES (1,2,'2021-04-13');
-/*!40000 ALTER TABLE `trip_coach` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -249,7 +170,7 @@ CREATE TABLE `user` (
   `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
   `userRole` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
@@ -275,4 +196,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-01  2:17:27
+-- Dump completed on 2021-05-09 12:42:47

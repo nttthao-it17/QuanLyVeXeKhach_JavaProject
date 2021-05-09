@@ -24,7 +24,8 @@ public class Trip implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int amount_of_trip_on_day;
+    private String trip_description;
+    private String coach_name;
     @ManyToOne
     @JoinColumn(name="route_id")
     private Route route;
@@ -44,22 +45,37 @@ public class Trip implements Serializable{
     }
 
     /**
-     * @return the amount_of_trip_on_day
+     * @return the trip_description
      */
-    public int getAmount_of_trip_on_day() {
-        return amount_of_trip_on_day;
+    public String getTrip_description() {
+        return trip_description;
     }
 
     /**
-     * @param amount_of_trip_on_day the amount_of_trip_on_day to set
+     * @param trip_description the trip_description to set
      */
-    public void setAmount_of_trip_on_day(int amount_of_trip_on_day) {
-        this.amount_of_trip_on_day = amount_of_trip_on_day;
+    public void setTrip_description(String trip_description) {
+        this.trip_description = trip_description;
+    }
+
+    /**
+     * @return the coach_name
+     */
+    public String getCoach_name() {
+        return coach_name;
+    }
+
+    /**
+     * @param coach_name the coach_name to set
+     */
+    public void setCoach_name(String coach_name) {
+        this.coach_name = coach_name;
     }
 
     
-   
-     
+    /**
+     * @return the route
+     */
     public Route getRoute() {
         return route;
     }
@@ -70,5 +86,5 @@ public class Trip implements Serializable{
     public void setRoute(Route route) {
         this.route = route;
     }
-    
+
 }

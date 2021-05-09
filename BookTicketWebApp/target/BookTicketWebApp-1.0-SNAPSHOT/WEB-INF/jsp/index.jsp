@@ -12,12 +12,14 @@
 <table class="table">
     <tr>
         <th>Ma chuyen di</th>
-        <th>Tong so ngay</th>
+        <th>Mo ta chuyen di</th>
+        <th>Ten hang xe</th>
     </tr>
     <c:forEach items="${trips}" var="p">
     <tr>
         <td>${p.id}</td>
-        <td>${p.amount_of_trip_on_day}</td>
+        <td>${p.trip_description}</td>
+        <td>${p.coach_name}</td>
      
     </tr>
     </c:forEach>

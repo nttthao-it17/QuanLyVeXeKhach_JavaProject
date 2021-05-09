@@ -17,9 +17,5 @@
             <a class="nav-link" href="<c:url value="/" />?rouId=${rou.id}">${rou.station_from}</a>
         </li>
         </c:forEach>
-       <ul>
-   
-
-</ul>
-    </ul>
+        </ul>
 </nav>

@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,47 @@ public class TripRepositoryImpl implements TripRepository{
         
         Query q = session.createQuery(query);
         return q.getResultList();
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteTrip(int tripId) {
+        try{
+            Session session = this.sessionFactory.getObject().getCurrentSession();
+            session.delete(session.get(Trip.class, tripId));
+           
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+            
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean addOrUpdateTrip(Trip trip) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        try{
+            if(trip.getId() > 0){
+            session.update(trip);
+        } else {
+            session.save(trip);
+        }
+            
+           return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Trip getTripById(int i) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        return session.get(Trip.class, i);
     }
     
 }

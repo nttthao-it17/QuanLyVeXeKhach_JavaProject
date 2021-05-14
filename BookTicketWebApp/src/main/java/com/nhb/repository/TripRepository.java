@@ -14,5 +14,7 @@ import java.util.List;
  */
 public interface TripRepository {
     List<Trip> getTrips(String kw);
-    
+    boolean deleteTrip(int TripId);
+    boolean addOrUpdateTrip(Trip p);
+    Trip getTripById(int tripId);
 }

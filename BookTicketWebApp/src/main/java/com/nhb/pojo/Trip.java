@@ -6,6 +6,7 @@
 package com.nhb.pojo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -24,10 +26,13 @@ public class Trip implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotNull(message = "{trip.trip_description.notNullMsg}")
     private String trip_description;
     private String coach_name;
+    private BigDecimal price;
     @ManyToOne
     @JoinColumn(name="route_id")
+    @NotNull(message = "{trip.route.notNullMsg}")
     private Route route;
 
     /**
@@ -72,7 +77,20 @@ public class Trip implements Serializable{
         this.coach_name = coach_name;
     }
 
-    
+    /**
+     * @return the price
+     */
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     /**
      * @return the route
      */
@@ -87,4 +105,5 @@ public class Trip implements Serializable{
         this.route = route;
     }
 
+    
 }

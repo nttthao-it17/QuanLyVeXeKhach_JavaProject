@@ -14,5 +14,7 @@ import java.util.List;
  */
 public interface RouteRepository {
     List<Route> getRoute();
-    Route getRouById(int id);
+    Route getRouById(int rouId);
+    boolean addOrUpdateRoute(Route r);
+    boolean deleteRoute(int RouteId);
 }

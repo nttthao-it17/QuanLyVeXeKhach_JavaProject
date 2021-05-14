@@ -10,6 +10,8 @@ import com.nhb.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,16 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author VIP
  */
 @Controller
+@ControllerAdvice
 public class HomeController {
     @Autowired
     private RouteService routeService;
     @Autowired
     private TripService tripService;
     
-    
+    @ModelAttribute
+    public void addAttributes(Model model){
+        model.addAttribute("routes", this.routeService.getRoute());
+    }
+      
     @RequestMapping("/")
     public String index(Model model, @RequestParam(name = "rouId", required = false ) String rouId){
-        model.addAttribute("routes", this.routeService.getRoute());
+        
         if (rouId == null)
             model.addAttribute("trips", this.tripService.getTrips(""));
         else 

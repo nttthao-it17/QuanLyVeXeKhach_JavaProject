@@ -10,12 +10,16 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <ul class="navbar-nav">
         <li class="nav-item active">
-            <a class="nav-link" href="<c:url value="/" />">Trang chu</a>
+            <a class="nav-link" href="<c:url value="/" />">Trang chủ</a>
         </li>
-        <c:forEach items="${routes}" var="rou">
+       
         <li class="nav-item">
-            <a class="nav-link" href="<c:url value="/" />?rouId=${rou.id}">${rou.station_from}</a>
+            <a class="nav-link text-info" href="<c:url value="/stats" />">
+                Thống kê doanh thu
+            </a>
         </li>
-        </c:forEach>
-        </ul>
+    </ul>
 </nav>
+                
+                
+

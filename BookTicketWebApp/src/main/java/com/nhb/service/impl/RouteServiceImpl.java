@@ -30,5 +30,15 @@ public class RouteServiceImpl implements RouteService{
     public Route getRouById(int id) {
         return this.routeRepository.getRouById(id);
     }
+
+    @Override
+    public boolean addOrUpdateRoute(Route rou) {
+        return this.routeRepository.addOrUpdateRoute(rou);
+    }
+
+    @Override
+    public boolean deleteRoute(int RouteId) {
+        return this.routeRepository.deleteRoute(RouteId);
+    }
     
 }

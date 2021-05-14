@@ -30,6 +30,13 @@ public class Route implements Serializable{
     @OneToMany(mappedBy = "route", fetch = FetchType.EAGER)
     private List<Trip> trips;
 
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
+    
+    
+
     /**
      * @return the id
      */

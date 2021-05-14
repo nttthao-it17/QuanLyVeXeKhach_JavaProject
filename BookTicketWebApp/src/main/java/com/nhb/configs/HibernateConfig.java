@@ -8,6 +8,8 @@ package com.nhb.configs;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.cfg.AvailableSettings;
+import static org.hibernate.cfg.AvailableSettings.DIALECT;
+import static org.hibernate.cfg.AvailableSettings.SHOW_SQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +32,14 @@ public class HibernateConfig {
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
-        LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-        factory.setPackagesToScan("com.nhb.pojo");
-        factory.setDataSource(dataSource());
-
-        return factory;
+        LocalSessionFactoryBean sessionFactory
+                = new LocalSessionFactoryBean();
+        sessionFactory.setPackagesToScan(new String[]{
+            "com.nhb.pojo"
+        });
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
     }
 
     @Bean
@@ -52,11 +57,17 @@ public class HibernateConfig {
 
     }
 
-    public Properties getProps() {
+//    public Properties getProps() {
+//        Properties props = new Properties();
+//        props.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
+//        props.setProperty(AvailableSettings.SHOW_SQL, env.getProperty("hibernate.showSql"));
+//
+//        return props;
+//    }
+    private Properties hibernateProperties() {
         Properties props = new Properties();
-        props.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
-        props.setProperty(AvailableSettings.SHOW_SQL, env.getProperty("hibernate.showSql"));
-
+        props.put(DIALECT, env.getProperty("hibernate.dialect"));
+        props.put(SHOW_SQL, env.getProperty("hibernate.showSql"));
         return props;
     }
 

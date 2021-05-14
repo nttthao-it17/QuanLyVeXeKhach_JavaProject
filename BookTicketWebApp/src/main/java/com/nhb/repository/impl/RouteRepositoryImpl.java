@@ -6,10 +6,12 @@
 package com.nhb.repository.impl;
 
 import com.nhb.pojo.Route;
+import com.nhb.pojo.Trip;
 import com.nhb.repository.RouteRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -51,9 +53,43 @@ public class RouteRepositoryImpl implements RouteRepository{
 
     @Override
     @Transactional
-    public Route getRouById(int id) {
-        Session s = this.sessionFactory.getObject().getCurrentSession();
-        return s.get(Route.class, id);
+    public Route getRouById(int rouId) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        return session.get(Route.class, rouId);
+    }
+
+    @Override
+    @Transactional
+    public boolean addOrUpdateRoute(Route route) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        try{
+            if(route.getId() > 0){
+            session.update(route);
+        } else {
+            session.save(route);
+        }
+            
+           return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteRoute(int routeId) {
+        try{
+            Session session = this.sessionFactory.getObject().getCurrentSession();
+            session.delete(session.get(Route.class, routeId));
+           
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+            
+        return false;
     }
     
 }

@@ -9,6 +9,7 @@ import com.nhb.pojo.Trip;
 import com.nhb.repository.TripRepository;
 import com.nhb.service.TripService;
 import java.util.List;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,21 @@ public class TripServiceImpl implements TripService{
     @Override
     public List<Trip> getTrips(String kw) {
         return this.tripRepository.getTrips(kw);
+    }
+
+    @Override
+    public boolean deleteTrip(int TripId) {
+        return this.tripRepository.deleteTrip(TripId);
+    }
+
+    @Override
+    public boolean addOrUpdateTrip(Trip trp) {
+        return this.tripRepository.addOrUpdateTrip(trp);
+    }
+
+    @Override
+    public Trip getTripById(int i) {
+        return this.tripRepository.getTripById(i);
     }
     
 }

@@ -14,4 +14,7 @@ import java.util.List;
  */
 public interface TripService {
     List<Trip> getTrips(String kw);
+    Trip getTripById(int tripId);
+    
+    boolean checkTripDescription(String description);
 }

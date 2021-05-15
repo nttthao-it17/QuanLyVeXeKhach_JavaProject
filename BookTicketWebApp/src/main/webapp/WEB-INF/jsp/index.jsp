@@ -5,21 +5,51 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h1 class="text-center text-success">DANH SACH CHUYEN DI</h1>
+<div class="container">
+    <h2 class="section-title">DANH SÁCH CHUYẾN ĐI</h2>
+    <div class="row">
+        <c:forEach items="${trips}" var="trip">
+            <div class="col-md-3 single-trip">
+                <div class="trip-f-image">
+                    <img class="img-setting" src="<spring:url value="/images/image.jpg" />">
+                    <div class="trip-hover">
+                        <a href="javascript:;" onclick="addCart(${trip.id})" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ</a>
+                        <a href="<spring:url value="/trips/${trip.id}" />" class="view-details-link"><i class="fa fa-link"></i> Xem chi tiết</a>
+                    </div>
+                </div>
 
-<table class="table">
-    <tr>
-        <th>Ma chuyen di</th>
-        <th>Tong so ngay</th>
-    </tr>
-    <c:forEach items="${trips}" var="p">
-    <tr>
-        <td>${p.id}</td>
-        <td>${p.amount_of_trip_on_day}</td>
-     
-    </tr>
-    </c:forEach>
-</table>
+                <h2><a href="#">${trip.tripDescription}</a></h2>
+                <h4>${trip.dateStarted}</h4>
+                <div class="trip-carousel-price">
+                    <ins>${trip.price} VNĐ</ins> 
+                </div> 
+            </div>
+        </c:forEach>
+    </div>
+</div>
+
+<script>
+function addCart(tripId, tripDescription) {
+    $.ajax({
+        url: "/BookTicketWebApp/api/cart",
+        type: "POST",
+        data: {
+            tripId: tripId,
+            num: 1
+        },
+        success: function (data) {
+            var a = $(".trip-count").text();
+            a = a === "" ? 0:parseInt(a);
+            $(".trip-count").text(a + 1);
+        },
+        error: function (jqXHR) {
+            alert(jqXHR);
+        }
+    });
+}
+</script>
 

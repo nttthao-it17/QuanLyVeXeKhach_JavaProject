@@ -6,11 +6,13 @@
 package com.nhb.service.impl;
 
 import com.nhb.pojo.Route;
+import com.nhb.pojo.Trip;
 import com.nhb.repository.RouteRepository;
 import com.nhb.service.RouteService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -22,13 +24,17 @@ public class RouteServiceImpl implements RouteService{
     private RouteRepository routeRepository;
 
     @Override
-    public List<Route> getRoute() {
-        return this.routeRepository.getRoute();
+    @Transactional(readOnly = true)
+    public List<Route> getRoutes() {
+        return routeRepository.getRoutes("");
     }
 
     @Override
-    public Route getRouById(int id) {
-        return this.routeRepository.getRouById(id);
+    @Transactional(readOnly = true)
+    public List<Trip> getTripByRoute(int routeId) {
+        return routeRepository.getTripByRoute(routeId);
     }
+
+    
     
 }

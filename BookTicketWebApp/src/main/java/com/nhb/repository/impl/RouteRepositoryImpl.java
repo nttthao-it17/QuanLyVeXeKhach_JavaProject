@@ -6,11 +6,17 @@
 package com.nhb.repository.impl;
 
 import com.nhb.pojo.Route;
+import com.nhb.pojo.Trip;
 import com.nhb.repository.RouteRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
@@ -24,36 +30,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class RouteRepositoryImpl implements RouteRepository{
     @Autowired
-    private LocalSessionFactoryBean sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Override
-    @Transactional
-    public List<Route> getRoute() {
-        Session s = this.sessionFactory.getObject().getCurrentSession();
-        Query q = s.createQuery("From Route");
-        return q.getResultList();
+    public List<Route> getRoutes(String kw) {
+        List<Route> routes;
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Route> cr = builder.createQuery(Route.class);
+        Root<Route> root = cr.from(Route.class);
+
+        CriteriaQuery query = cr.select(root);
+        if (!kw.isEmpty())
+            query = query.where(builder.like(root.get("station_from").as(String.class),  
+                    "%" + kw + "%"));
+
+        routes = session.createQuery(query).getResultList();        
+        return routes;
     }
-    
-//        Route r1 = new Route();
-//        r1.setId(1);
-//        r1.setStation_from("Ha Noi");
-//        r1.setStation_to("Lam Dong");
-//        Route r2 = new Route();
-//        r2.setId(2);
-//        r2.setStation_from("Hai Phong");
-//        r2.setStation_to("Nha Trang");
-//        
-//        List<Route> routes = new ArrayList<>();
-//        routes.add(r1);
-//        routes.add(r2);
-//        
-//        return routes;   
 
     @Override
-    @Transactional
-    public Route getRouById(int id) {
-        Session s = this.sessionFactory.getObject().getCurrentSession();
-        return s.get(Route.class, id);
+    public Route getRouteById(int id) {
+        Route route;
+        Session session = sessionFactory.getCurrentSession();
+        route = session.get(Route.class, id);
+        
+        return route;
     }
-    
+
+    @Override
+    public List<Trip> getTripByRoute(int tripId) {
+        List<Trip> trips = null;
+        Session session = sessionFactory.getCurrentSession(); 
+        Route route = session.get(Route.class, tripId);
+        if (route != null) {
+            Hibernate.initialize(route.getTrips());
+            trips = route.getTrips();
+        }
+
+        return trips;
+    }
 }

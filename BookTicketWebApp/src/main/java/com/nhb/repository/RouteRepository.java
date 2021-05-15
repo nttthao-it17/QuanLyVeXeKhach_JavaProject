@@ -6,6 +6,7 @@
 package com.nhb.repository;
 
 import com.nhb.pojo.Route;
+import com.nhb.pojo.Trip;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ import java.util.List;
  * @author VIP
  */
 public interface RouteRepository {
-    List<Route> getRoute();
-    Route getRouById(int id);
+    List<Route> getRoutes(String kw);
+    Route getRouteById(int id);
+    List<Trip> getTripByRoute(int tripId);
+
 }

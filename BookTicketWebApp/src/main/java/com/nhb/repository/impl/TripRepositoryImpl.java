@@ -7,6 +7,8 @@ package com.nhb.repository.impl;
 
 import com.nhb.pojo.Trip;
 import com.nhb.repository.TripRepository;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -15,11 +17,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,26 +29,73 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class TripRepositoryImpl implements TripRepository{
     @Autowired
-    private LocalSessionFactoryBean sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Override
-    @Transactional
     public List<Trip> getTrips(String kw) {
-        Session session = this.sessionFactory.getObject().getCurrentSession();
-        
+        List<Trip> trips;
+        Session session = sessionFactory.getCurrentSession();
+
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Trip> query = builder.createQuery(Trip.class);
-        Root root = query.from(Trip.class);
-        query.select(root);
-        
-        if (kw != null && !kw.isEmpty()){
-            Predicate p = builder.like(root.get("name").as(String.class),
-                    String.format("%%%s%%", kw));
-            query = query.where(p);
+        CriteriaQuery<Trip> cr = builder.createQuery(Trip.class);
+        Root<Trip> root = cr.from(Trip.class);
+
+        CriteriaQuery<Trip> query = cr.select(root);
+        if (!kw.isEmpty()) {
+            String pattern = String.format("%%%s%%", kw);
+            Predicate p1 = builder.like(root.get("trip_description").as(String.class), pattern);
+            Predicate p2 = builder.like(root.get("coach_name").as(String.class), pattern);
+
+            query = query.where(builder.or(p1, p2));
         }
-        
-        Query q = session.createQuery(query);
-        return q.getResultList();
+
+        trips = session.createQuery(query).getResultList();
+
+        return trips;
     }
-    
+
+//    @Override
+//    public List<Trip> getTripsByPrice(BigDecimal fromPrice, BigDecimal toPrice) {
+//        List<Trip> trips;
+//        Session session = sessionFactory.getCurrentSession();
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<Trip> cr = builder.createQuery(Trip.class);
+//        Root<Trip> root = cr.from(Trip.class);
+//
+//        CriteriaQuery query = cr.select(root);
+//
+//        Predicate p1 = builder.greaterThanOrEqualTo(root.get("price").as(BigDecimal.class), fromPrice);
+//        Predicate p2 = builder.lessThanOrEqualTo(root.get("price").as(BigDecimal.class), toPrice);
+//
+//        query = query.where(builder.and(p1, p2));
+//
+//        trips = session.createQuery(query).getResultList();
+//        
+//        return trips;
+//    }
+
+    @Override
+    public Trip getTripsById(int id) {
+        Trip trip;
+        
+        Session session = sessionFactory.getCurrentSession();
+        trip = session.get(Trip.class, id);
+        
+        return trip;
+    }
+
+    @Override
+    public boolean checkTripDescription(String tripDescription) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Trip> cr = builder.createQuery(Trip.class);
+
+        Root<Trip> root = cr.from(Trip.class);
+        CriteriaQuery query = cr.select(root);            
+        query.where(builder.equal(builder.upper(root.get("trip_description").as(String.class)), 
+                tripDescription.toUpperCase()));
+
+        return session.createQuery(query).getSingleResult() == null;
+    }
+
 }

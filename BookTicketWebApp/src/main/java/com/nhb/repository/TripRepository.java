@@ -6,6 +6,7 @@
 package com.nhb.repository;
 
 import com.nhb.pojo.Trip;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -14,5 +15,8 @@ import java.util.List;
  */
 public interface TripRepository {
     List<Trip> getTrips(String kw);
+//    List<Trip> getTripsByPrice(BigDecimal fromPrice, BigDecimal toPrice);
+    Trip getTripsById(int id);
     
+    boolean checkTripDescription(String description);
 }
